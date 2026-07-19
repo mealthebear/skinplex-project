@@ -17,5 +17,13 @@
   "bugs": {
     "url": "https://github.com/mealthebear/skinplex-project/issues"
   },
-  "homepage": "https://github.com/mealthebear/skinplex-project#readme"
+  "homepage": "https://github.com/mealthebear/skinplex-project#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "create-react-app": "^5.1.0",
+    "express": "^5.2.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-scripts": "^5.0.1"
+  }
 }
