@@ -21,6 +21,10 @@ function Listing({ listingId, sellerId, mode }) {
         .then(data => {
           setListingData(data);
           setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
         });
     } else {
       setLoading(false);
