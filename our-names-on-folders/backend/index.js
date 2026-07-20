@@ -10,11 +10,34 @@ app.use(cors());
 app.use(express.json());
 
 // Listing routes
+const fetchUser = require('./vince-backend/user/fetchUser');
+const updateUser = require('./vince-backend/user/updateUser');
 const storeListing = require('./vince-backend/listings/storeListing');
 const fetchListings = require('./vince-backend/listings/fetchListings');
 const fetchListingById = require('./vince-backend/listings/fetchListingById');
 const updateListing = require('./vince-backend/listings/updateListing');
 const deleteListing = require('./vince-backend/listings/deleteListing');
+
+app.get('/users/:id', async (req, res) => {
+  try {
+    const user = await fetchUser(req.params.id);
+    if (!user) return res.status(404).send('User not found');
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching user');
+  }
+});
+
+app.put('/users/:id', async (req, res) => {
+  try {
+    await updateUser(req.params.id, req.body);
+    res.send('User updated');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating user');
+  }
+});
 
 app.post('/listings', async (req, res) => {
   try {

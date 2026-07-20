@@ -1,13 +1,23 @@
 const { getDb } = require('../../db');
 
-async function fetchListings(filters = {}) {
+async function fetchListings(filters) {
   const db = getDb();
-  let query = {};
-  if (filters.game) query.game = filters.game;
-  if (filters.type) query.type = filters.type;
+  const query = {};
 
-  const results = await db.collection('listings').find(query).toArray();
-  return results;
+  if (filters) {
+    if (filters.game) {
+      query.game = filters.game;
+    }
+    if (filters.type) {
+      query.type = filters.type;
+    }
+    if (filters.sellerId) {
+      query.sellerId = filters.sellerId;
+    }
+  }
+
+  const listings = await db.collection('listings').find(query).toArray();
+  return listings;
 }
 
 module.exports = fetchListings;
