@@ -51,7 +51,7 @@ function App() {
             Browse Skins
           </Link>
           <Link
-            to={`/user/${currentUser._id}`}
+            to={`/users/${currentUser._id}`}
             style={{
               textDecoration: "none",
               color: "#007bff",
@@ -103,7 +103,7 @@ function App() {
           />
 
           <Route
-            path="/user/:id"
+            path="/users/:id"
             element={<UserProfile currentUser={currentUser} />}
           />
 
