@@ -1,8 +1,8 @@
-require('dotenv').config();
 const { OAuth2Client } = require("google-auth-library");
 const { getDb } = require("../../db");
 
-const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID =
+  "702851582781-c9j6t98aptdam1eiko8qudftc5d6m6h4.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 
 async function handleGoogleAuth(idToken) {
