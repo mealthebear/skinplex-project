@@ -115,7 +115,7 @@ function App() {
 
       {page === "view" && viewId && (
         <div>
-          <Listing mode="view" listingId={viewId} />
+          <Listing mode="view" listingId={viewId} userId={currentUserId} />
 
           <hr style={{ margin: "40px 0" }} />
 

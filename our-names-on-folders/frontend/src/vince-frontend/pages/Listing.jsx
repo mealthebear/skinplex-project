@@ -3,7 +3,7 @@ import SkinSelector from '../components/SkinSelector';
 
 const API_URL = 'http://localhost:3001';
 
-function Listing({ listingId, sellerId, mode }) {
+function Listing({ listingId, sellerId, mode, userId }) {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [type, setType] = useState('sell');
@@ -13,6 +13,8 @@ function Listing({ listingId, sellerId, mode }) {
 
   const [listing, setListingData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [purchasing, setPurchasing] = useState(false);
+  const [purchased, setPurchased] = useState(false);
 
   useEffect(() => {
     if (mode === 'view') {
@@ -240,6 +242,64 @@ function Listing({ listingId, sellerId, mode }) {
         <p style={{ color: '#ff4655', fontWeight: 'bold', fontSize: '20px', marginBottom: '12px' }}>
           ${listing.price} - {listing.type === 'rent' ? 'Rent' : 'Sell'}
         </p>
+
+        {listing.status === 'sold' || listing.status === 'rented' || purchased ? (
+          <p style={{
+            color: '#9aa3b5',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            marginBottom: '12px',
+            padding: '10px 20px',
+            backgroundColor: '#1a2332',
+            borderRadius: '6px',
+            display: 'inline-block'
+          }}>
+            {listing.type === 'rent' ? '✓ Rented' : '✓ Sold'}
+          </p>
+        ) : (
+          <button
+            onClick={() => {
+              if (!userId) {
+                alert('You must be logged in to ' + (listing.type === 'rent' ? 'rent' : 'buy'));
+                return;
+              }
+              setPurchasing(true);
+              fetch(API_URL + '/listings/' + listingId + '/purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ buyerId: userId })
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.error) {
+                    alert(data.error);
+                  } else {
+                    setPurchased(true);
+                    alert(listing.type === 'rent' ? 'Successfully rented!' : 'Successfully purchased!');
+                  }
+                  setPurchasing(false);
+                })
+                .catch(() => {
+                  alert('Something went wrong');
+                  setPurchasing(false);
+                });
+            }}
+            disabled={purchasing}
+            style={{
+              padding: '12px 28px',
+              borderRadius: '6px',
+              border: 'none',
+              backgroundColor: purchasing ? '#555' : '#ff4655',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: purchasing ? 'not-allowed' : 'pointer',
+              marginBottom: '12px'
+            }}
+          >
+            {purchasing ? 'Processing...' : (listing.type === 'rent' ? 'Rent Now' : 'Buy Now')}
+          </button>
+        )}
         <p style={{ color: '#c8ceda', marginBottom: 0 }}>
           {listing.description || 'No description.'}
         </p>
