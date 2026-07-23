@@ -3,7 +3,7 @@ import SkinSelector from '../components/SkinSelector';
 
 const API_URL = 'http://localhost:3001';
 
-function Listing({ listingId, sellerId, mode, userId }) {
+function Listing({ listingId, sellerId, mode, userId, onDelete }) {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [type, setType] = useState('sell');
@@ -300,6 +300,33 @@ function Listing({ listingId, sellerId, mode, userId }) {
             {purchasing ? 'Processing...' : (listing.type === 'rent' ? 'Rent Now' : 'Buy Now')}
           </button>
         )}
+        {userId && listing.sellerId === userId && (
+  <button
+    onClick={() => {
+      if (window.confirm('Are you sure you want to delete this listing?')) {
+        fetch(API_URL + '/listings/' + listingId, { method: 'DELETE' })
+          .then(() => {
+            alert('Listing deleted');
+            if (onDelete) onDelete();
+          })
+          .catch(() => alert('Failed to delete listing'));
+      }
+    }}
+    style={{
+      padding: '10px 20px',
+      borderRadius: '6px',
+      border: '1px solid #ff4655',
+      backgroundColor: 'transparent',
+      color: '#ff4655',
+      fontSize: '14px',
+      cursor: 'pointer',
+      marginLeft: '12px',
+      marginBottom: '12px'
+    }}
+  >
+    Delete Listing
+  </button>
+)}
         <p style={{ color: '#c8ceda', marginBottom: 0 }}>
           {listing.description || 'No description.'}
         </p>

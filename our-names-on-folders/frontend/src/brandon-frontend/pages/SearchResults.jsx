@@ -43,7 +43,6 @@ function SearchResults({ query, userId, onListingClick, onViewReviews }) {
         <select value={gameFilter} onChange={e => setGameFilter(e.target.value)}>
           <option value="">All Games</option>
           <option value="Valorant">Valorant</option>
-          <option value="CS2">CS2</option>
         </select>
  
         <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>

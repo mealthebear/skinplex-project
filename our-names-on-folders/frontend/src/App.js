@@ -115,7 +115,7 @@ function App() {
 
       {page === "view" && viewId && (
         <div>
-          <Listing mode="view" listingId={viewId} userId={currentUserId} />
+          <Listing mode="view" listingId={viewId} userId={currentUserId} onDelete={() => setPage('home')} />
 
           <hr style={{ margin: "40px 0" }} />
 
