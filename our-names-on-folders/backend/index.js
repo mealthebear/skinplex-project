@@ -21,6 +21,8 @@ const deleteListing = require("./vince-backend/listings/deleteListing");
 const addToSearchHistory = require("./brandon-backend/searchHistory/addToSearchHistory");
 const fetchSearchHistory = require("./brandon-backend/searchHistory/fetchSearchHistory");
 const fetchSimilarItems = require("./brandon-backend/recommendation/fetchSimilarItems");
+const addReview = require("./dennis-backend/ratingsAndReviews/addReview");
+const fetchRatingsAndReviews = require("./dennis-backend/ratingsAndReviews/fetchRatingsAndReviews");
 
 app.get("/users/:id", async (req, res) => {
   try {
@@ -40,6 +42,27 @@ app.put("/users/:id", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Error updating user");
+  }
+});
+
+app.get("/users/:id/ratings-and-reviews", async (req, res) => {
+  try {
+    const data = await fetchRatingsAndReviews(req.params.id);
+    if (!data) return res.status(404).send("User not found");
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching ratings and reviews");
+  }
+});
+
+app.post("/users/:id/reviews", async (req, res) => {
+  try {
+    const result = await addReview(req.params.id, req.body);
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error adding review");
   }
 });
 
