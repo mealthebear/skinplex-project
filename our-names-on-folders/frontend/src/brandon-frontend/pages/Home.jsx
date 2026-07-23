@@ -141,6 +141,7 @@ function Home({ userId, onListingClick, onSearch, onViewReviews }) {
                 key={listing._id}
                 listing={listing}
                 onClick={() => onListingClick && onListingClick(listing._id)}
+                onViewReviews={onViewReviews}
               />
             ))}
           </div>

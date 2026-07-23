@@ -2,7 +2,12 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../../db");
 
 async function fetchRatingsAndReviews(userId) {
+  if (!userId || !ObjectId.isValid(userId)) {
+    return null;
+  }
+
   const db = getDb();
+
   const user = await db
     .collection("users")
     .findOne(
@@ -11,6 +16,7 @@ async function fetchRatingsAndReviews(userId) {
     );
 
   if (!user) return null;
+
   return {
     rating: user.rating || { average: 0, count: 0 },
     reviews: user.reviews || [],
