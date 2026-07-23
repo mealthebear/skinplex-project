@@ -12,7 +12,6 @@ function Home({ userId, onListingClick, onSearch, onViewReviews }) {
   const [loading, setLoading] = useState(true);
   const searchRef = useRef(null);
 
-  // Fetch search history for dropdown
   useEffect(() => {
     if (!userId) return;
     fetch(API_URL + "/search-history/" + userId)
@@ -21,10 +20,8 @@ function Home({ userId, onListingClick, onSearch, onViewReviews }) {
       .catch(() => {});
   }, [userId]);
 
-  // Fetch recommended listings (based on user's search history)
   useEffect(() => {
     if (!userId) {
-      // If not logged in, just show recent listings
       fetch(API_URL + "/listings")
         .then((res) => res.json())
         .then((data) => {
@@ -43,14 +40,12 @@ function Home({ userId, onListingClick, onSearch, onViewReviews }) {
       })
       .catch(() => setLoading(false));
 
-    // Also fetch recent listings
     fetch(API_URL + "/listings")
       .then((res) => res.json())
       .then((data) => setRecent(data.slice(0, 12)))
       .catch(() => {});
   }, [userId]);
 
-  // Close history dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -74,7 +69,6 @@ function Home({ userId, onListingClick, onSearch, onViewReviews }) {
     if (onSearch) onSearch(query);
   }
 
-  // Filter history as user types
   const filteredHistory = searchText
     ? history.filter((h) =>
         h.query.toLowerCase().includes(searchText.toLowerCase()),
