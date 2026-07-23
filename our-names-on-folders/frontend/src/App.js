@@ -71,21 +71,6 @@ function App() {
         <button style={btn} onClick={() => setPage("history")}>
           Search History
         </button>
-        <button style={btn} onClick={() => setPage("view")}>
-          View Listing (enter id below)
-        </button>
-        <br />
-        <br />
-        <input
-          placeholder="listing id to view"
-          value={viewId}
-          onChange={(e) => setViewId(e.target.value)}
-          style={{
-            padding: "8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
       </div>
 
       {page === "home" && (
