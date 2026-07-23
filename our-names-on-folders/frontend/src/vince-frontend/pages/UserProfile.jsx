@@ -4,7 +4,7 @@ import UserProfileOptions from "../components/UserProfileOptions";
 
 const API_URL = "http://localhost:3001";
 
-function UserProfile({ userId, viewerId, onListingClick }) {
+function UserProfile({ userId, viewerId, onListingClick, onViewReviews }) {
   const [user, setUser] = useState(null);
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,92 +34,49 @@ function UserProfile({ userId, viewerId, onListingClick }) {
     setUser({ ...user, bio: newBio });
   }
 
-  if (loading) {
-    return (
-      <p style={{ color: "#9aa3b5", textAlign: "left" }}>Loading profile...</p>
-    );
-  }
-
-  if (!user) {
-    return (
-      <p style={{ color: "#9aa3b5", textAlign: "left" }}>User not found.</p>
-    );
-  }
+  if (loading) return <p>Loading profile...</p>;
+  if (!user) return <p>User not found.</p>;
 
   return (
-    <div
-      style={{
-        maxWidth: "1240px",
-        margin: "0 auto",
-        padding: "24px",
-        textAlign: "left",
-        backgroundColor: "#111823",
-        color: "#f0f0f0",
-        borderRadius: "12px",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#111823",
-          border: "1px solid #3a4255",
-          borderRadius: "8px",
-          padding: "20px",
-          marginBottom: "24px",
-        }}
-      >
-        <h2 style={{ marginTop: 0, marginBottom: "8px" }}>{user.username}</h2>
-        <p style={{ color: "#9aa3b5", marginBottom: "16px" }}>
-          {user.bio || "No bio yet."}
+    <div>
+      <h2>{user.username}</h2>
+      <p>{user.bio || "No bio yet."}</p>
+
+      <UserProfileOptions
+        userId={userId}
+        currentBio={user.bio}
+        isOwnProfile={isOwnProfile}
+        onUpdated={handleBioUpdated}
+      />
+
+      <div style={{ margin: "20px 0" }}>
+        <p>
+          <strong>Rating:</strong> {user.rating ? user.rating.average : 0} / 5 (
+          {user.rating ? user.rating.count : 0} reviews)
         </p>
 
-        <UserProfileOptions
-          userId={userId}
-          currentBio={user.bio}
-          isOwnProfile={isOwnProfile}
-          onUpdated={handleBioUpdated}
-        />
-
-        <div style={{ marginTop: "20px" }}>
-          <p style={{ marginBottom: "8px" }}>
-            <strong>Rating:</strong>{" "}
-            <span style={{ color: "#ff4655" }}>
-              {user.rating ? user.rating.average : 0} / 5
-            </span>{" "}
-            <span style={{ color: "#9aa3b5" }}>
-              ({user.rating ? user.rating.count : 0} reviews)
-            </span>
-          </p>
-
-          <span
-            style={{
-              color: "#ff4655",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-            onClick={() => alert("Reviews page not yet implemented in App.js!")}
-          >
-            View or Add Reviews &rarr;
-          </span>
-        </div>
+        <span
+          style={{
+            color: "#007bff",
+            textDecoration: "underline",
+            cursor: "pointer",
+          }}
+          onClick={() => onViewReviews(userId)}
+        >
+          View or Add Reviews
+        </span>
       </div>
 
-      <h3 style={{ marginBottom: "12px" }}>
-        Listings{" "}
-        <span style={{ color: "#9aa3b5", fontWeight: "normal", fontSize: "14px" }}>
-          ({listings.length})
-        </span>
-      </h3>
+      <h3>Listings</h3>
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "16px",
+          gap: "12px",
           marginBottom: "32px",
         }}
       >
-        {listings.length === 0 && (
-          <p style={{ color: "#9aa3b5" }}>No active listings.</p>
-        )}
+        {listings.length === 0 && <p>No active listings.</p>}
         {listings.map((listing) => (
           <ListingCard
             key={listing._id}
@@ -129,27 +86,19 @@ function UserProfile({ userId, viewerId, onListingClick }) {
         ))}
       </div>
 
-      <h3 style={{ marginBottom: "12px" }}>Recent Reviews</h3>
-      {(!user.reviews || user.reviews.length === 0) && (
-        <p style={{ color: "#9aa3b5" }}>No reviews yet.</p>
-      )}
+      <h3>Recent Reviews</h3>
+      {(!user.reviews || user.reviews.length === 0) && <p>No reviews yet.</p>}
 
       {user.reviews &&
         user.reviews.slice(0, 3).map((review, i) => (
           <div
             key={i}
-            style={{
-              backgroundColor: "#111823",
-              border: "1px solid #3a4255",
-              borderRadius: "8px",
-              padding: "12px",
-              marginBottom: "10px",
-            }}
+            style={{ borderTop: "1px solid #eee", padding: "8px 0" }}
           >
-            <p style={{ margin: "0 0 6px 0", color: "#ff4655" }}>
+            <p>
               <strong>{review.stars}/5 stars</strong>
             </p>
-            <p style={{ margin: 0, color: "#c8ceda" }}>{review.comment}</p>
+            <p>{review.comment}</p>
           </div>
         ))}
     </div>
