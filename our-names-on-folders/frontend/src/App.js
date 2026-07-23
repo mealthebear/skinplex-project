@@ -15,31 +15,42 @@ function App() {
 
   const currentUserId = user._id || user.id;
 
+  const btn = {
+    marginRight: "8px",
+    marginBottom: "8px",
+    padding: "8px 14px",
+    borderRadius: "6px",
+    border: "1px solid #3a4255",
+    backgroundColor: "#111823",
+    color: "#f0f0f0",
+    cursor: "pointer",
+  };
+
   return (
     <div className="App">
       <div style={{ marginBottom: "20px" }}>
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: "12px" }}>
           <strong>Welcome, {user.username}!</strong>
           <button
             onClick={() => setUser(null)}
-            style={{ marginLeft: "15px", color: "red" }}
+            style={{
+              marginLeft: "15px",
+              color: "#ff4655",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
             Logout
           </button>
         </div>
 
-        <button onClick={() => setPage("create")}>Create Listing</button>
-        <button onClick={() => setPage("profile")}>My Profile</button>
-        <button onClick={() => setPage("view")}>
-          View Listing (enter id below)
+        <button style={btn} onClick={() => setPage("create")}>
+          Create Listing
         </button>
-        <br />
-        <br />
-        <input
-          placeholder="listing id to view"
-          value={viewId}
-          onChange={(e) => setViewId(e.target.value)}
-        />
+        <button style={btn} onClick={() => setPage("profile")}>
+          My Profile
+        </button>
       </div>
 
       {page === "create" && <Listing mode="create" sellerId={currentUserId} />}
