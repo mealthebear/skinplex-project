@@ -21,6 +21,7 @@ const addToSearchHistory = require('./brandon-backend/searchHistory/addToSearchH
 const fetchSearchHistory = require('./brandon-backend/searchHistory/fetchSearchHistory');
 const fetchSimilarItems = require('./brandon-backend/recommendation/fetchSimilarItems');
 const purchaseListing = require('./brandon-backend/purchase/purchaseListing');
+const handleGoogleAuth = require('./dennis-backend/auth/googleAuth');
 
 app.get('/users/:id', async (req, res) => {
   try {
@@ -208,6 +209,22 @@ app.post('/listings/:id/purchase', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/google', async (req, res) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({ error: 'Google ID Token is required' });
+  }
+
+  try {
+    const user = await handleGoogleAuth(idToken);
+    res.json({ message: 'Authentication successful', user: user });
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    res.status(401).json({ error: 'Invalid Google token' });
   }
 });
 
