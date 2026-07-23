@@ -82,6 +82,7 @@ function UserProfile({ userId, viewerId, onListingClick, onViewReviews }) {
             key={listing._id}
             listing={listing}
             onClick={() => onListingClick(listing._id)}
+            onViewReviews={onViewReviews}
           />
         ))}
       </div>

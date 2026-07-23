@@ -3,7 +3,7 @@ import ListingCard from '../../vince-frontend/components/ListingCard';
  
 const API_URL = 'http://localhost:3001';
  
-function SearchResults({ query, userId, onListingClick }) {
+function SearchResults({ query, userId, onListingClick, onViewReviews }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [gameFilter, setGameFilter] = useState('');
@@ -65,6 +65,7 @@ function SearchResults({ query, userId, onListingClick }) {
             key={listing._id}
             listing={listing}
             onClick={() => onListingClick && onListingClick(listing._id)}
+            onViewReviews={onViewReviews}
           />
         ))}
       </div>
