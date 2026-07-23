@@ -6,12 +6,14 @@ import Home from "./brandon-frontend/pages/Home";
 import SearchResults from "./brandon-frontend/pages/SearchResults";
 import SearchHistory from "./brandon-frontend/pages/SearchHistory";
 import RecommendedResults from "./brandon-frontend/components/RecommendedResults";
+import RatingsAndReviews from "./dennis-frontend/pages/RatingsAndReviews";
 
 function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState("home");
   const [viewId, setViewId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [reviewUserId, setReviewUserId] = useState("");
 
   if (!user) {
     return <AuthPage onAuthSuccess={(userData) => setUser(userData)} />;
@@ -38,6 +40,11 @@ function App() {
   const handleViewListing = (id) => {
     setViewId(id);
     setPage("view");
+  };
+
+  const handleViewReviews = (targetId) => {
+    setReviewUserId(targetId);
+    setPage("reviews");
   };
 
   return (
@@ -78,6 +85,7 @@ function App() {
           userId={currentUserId}
           onListingClick={handleViewListing}
           onSearch={handleSearch}
+          onViewReviews={handleViewReviews}
         />
       )}
 
@@ -86,6 +94,7 @@ function App() {
           query={searchQuery}
           userId={currentUserId}
           onListingClick={handleViewListing}
+          onViewReviews={handleViewReviews}
         />
       )}
 
@@ -100,6 +109,7 @@ function App() {
           userId={currentUserId}
           viewerId={currentUserId}
           onListingClick={handleViewListing}
+          onViewReviews={handleViewReviews}
         />
       )}
 
@@ -112,8 +122,16 @@ function App() {
           <RecommendedResults
             listingId={viewId}
             onListingClick={handleViewListing}
+            onViewReviews={handleViewReviews}
           />
         </div>
+      )}
+
+      {page === "reviews" && (
+        <RatingsAndReviews
+          targetUserId={reviewUserId}
+          currentUserId={currentUserId}
+        />
       )}
     </div>
   );
