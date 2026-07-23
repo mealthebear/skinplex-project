@@ -36,13 +36,29 @@ function LoginButton({ onLoginSuccess }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          margin: "20px",
+          justifyContent: "center",
+          width: "100%",
         }}
       >
-        <h3>Sign In / Sign Up</h3>
+        <h3
+          style={{
+            marginTop: 0,
+            marginBottom: "20px",
+            fontSize: "1.25rem",
+            fontWeight: "600",
+            letterSpacing: "0.5px",
+          }}
+        >
+          Sign In / Sign Up
+        </h3>
+
         <GoogleLogin
           onSuccess={handleSuccess}
           onError={() => alert("Google Login Failed")}
+          theme="filled_black"
+          size="large"
+          shape="rectangular"
+          text="continue_with"
         />
       </div>
     </GoogleOAuthProvider>
