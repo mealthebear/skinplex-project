@@ -1,21 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
 import ListingCard from "../components/ListingCard";
 import UserProfileOptions from "../components/UserProfileOptions";
 
 const API_URL = "http://localhost:3001";
 
-function UserProfile({ currentUser }) {
-  const { id } = useParams();
-  const userId = id;
-
-  const navigate = useNavigate();
-
+function UserProfile({ userId, viewerId, onListingClick }) {
   const [user, setUser] = useState(null);
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const isOwnProfile = currentUser && currentUser._id === userId;
+  const isOwnProfile = viewerId === userId;
 
   useEffect(() => {
     setLoading(true);
@@ -60,12 +54,17 @@ function UserProfile({ currentUser }) {
           <strong>Rating:</strong> {user.rating ? user.rating.average : 0} / 5 (
           {user.rating ? user.rating.count : 0} reviews)
         </p>
-        <Link
-          to={`/user/${userId}/reviews`}
-          style={{ color: "#007bff", textDecoration: "none" }}
+
+        <span
+          style={{
+            color: "#007bff",
+            textDecoration: "underline",
+            cursor: "pointer",
+          }}
+          onClick={() => alert("Reviews page not yet implemented in App.js!")}
         >
           View or Add Reviews &rarr;
-        </Link>
+        </span>
       </div>
 
       <h3>Listings</h3>
@@ -82,8 +81,7 @@ function UserProfile({ currentUser }) {
           <ListingCard
             key={listing._id}
             listing={listing}
-            // Use navigate to go straight to the listing URL
-            onClick={() => navigate(`/listing/${listing._id}`)}
+            onClick={() => onListingClick(listing._id)}
           />
         ))}
       </div>
@@ -108,4 +106,3 @@ function UserProfile({ currentUser }) {
 }
 
 export default UserProfile;
-
