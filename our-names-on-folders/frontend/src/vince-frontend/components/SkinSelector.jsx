@@ -88,38 +88,114 @@ function SkinSelector({ selectedSkins, onChange }) {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search skins..."
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-      />
+      <div style={{ marginBottom: '12px' }}>
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: '#9aa3b5', fontSize: '13px' }}>
+            Search
+          </label>
+          <input
+            type="text"
+            placeholder="Search skins..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            style={{
+              width: '100%',
+              maxWidth: '300px',
+              padding: '8px',
+              borderRadius: '6px',
+              border: '1px solid #3a4255',
+              backgroundColor: '#111823',
+              color: '#fff',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
 
-      <select value={weaponFilter} onChange={e => setWeaponFilter(e.target.value)}>
-        <option value="All">All</option>
-        {weaponNames.map(name => <option key={name} value={name}>{name}</option>)}
-      </select>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px', color: '#9aa3b5', fontSize: '13px' }}>
+              Weapon
+            </label>
+            <select
+              value={weaponFilter}
+              onChange={e => setWeaponFilter(e.target.value)}
+              style={{
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #3a4255',
+                backgroundColor: '#111823',
+                color: '#fff'
+              }}
+            >
+              <option value="All">All weapons</option>
+              {weaponNames.map(name => <option key={name} value={name}>{name}</option>)}
+            </select>
+          </div>
 
-      <select value={rarityFilter} onChange={e => setRarityFilter(e.target.value)}>
-        <option value="All">All</option>
-        {rarityNames.map(name => <option key={name} value={name}>{name}</option>)}
-      </select>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px', color: '#9aa3b5', fontSize: '13px' }}>
+              Rarity
+            </label>
+            <select
+              value={rarityFilter}
+              onChange={e => setRarityFilter(e.target.value)}
+              style={{
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid #3a4255',
+                backgroundColor: '#111823',
+                color: '#fff'
+              }}
+            >
+              <option value="All">All rarities</option>
+              {rarityNames.map(name => <option key={name} value={name}>{name}</option>)}
+            </select>
+          </div>
+        </div>
+      </div>
 
-      <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', maxHeight: '500px', overflowY: 'auto', marginTop: '12px', paddingRight: '12px' }}>
         {filteredSkins.slice(0, 100).map(skin => (
           <div
             key={skin.uuid}
             onClick={() => toggleSkin(skin)}
             style={{
-              display: 'flex',
-              alignItems: 'center',
+              flex: '1 1 180px',
+              maxWidth: 'calc(20% - 13px)',
+              boxSizing: 'border-box',
+              textAlign: 'center',
               cursor: 'pointer',
-              backgroundColor: selectedSkins.find(s => s.uuid === skin.uuid) ? '#d0e8ff' : 'transparent',
-              padding: '4px'
+              padding: '10px',
+              borderRadius: '8px',
+              border: selectedSkins.find(s => s.uuid === skin.uuid) ? '2px solid #ff4655' : '1px solid #3a4255',
+              backgroundColor: selectedSkins.find(s => s.uuid === skin.uuid) ? '#1a2230' : '#111823'
             }}
           >
-            {skin.displayIcon && <img src={skin.displayIcon} alt={skin.displayName} width="40" />}
-            <span style={{ marginLeft: '8px' }}>{skin.displayName}</span>
+            {skin.displayIcon ? (
+              <img
+                src={skin.displayIcon}
+                alt={skin.displayName}
+                style={{ width: '100%', maxWidth: '170px', height: '170px', objectFit: 'contain' }}
+              />
+            ) : (
+              <div style={{
+                width: '100%',
+                maxWidth: '170px',
+                height: '170px',
+                margin: '0 auto',
+                backgroundColor: '#1a2230',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#9aa3b5',
+                fontSize: '13px'
+              }}>
+                No image
+              </div>
+            )}
+            <p style={{ marginTop: '8px', marginBottom: 0, fontSize: '16px', color: '#f0f0f0' }}>
+              {skin.displayName}
+            </p>
           </div>
         ))}
       </div>

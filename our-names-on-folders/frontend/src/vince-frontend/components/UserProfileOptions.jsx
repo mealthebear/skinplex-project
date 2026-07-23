@@ -30,15 +30,72 @@ function UserProfileOptions({ userId, currentBio, isOwnProfile, onUpdated }) {
   }
 
   if (!editing) {
-    return <button onClick={() => setEditing(true)}>Edit Profile</button>;
+    return (
+      <button
+        onClick={() => setEditing(true)}
+        style={{
+          padding: '8px 16px',
+          borderRadius: '6px',
+          border: '1px solid #3a4255',
+          backgroundColor: '#111823',
+          color: '#f0f0f0',
+          cursor: 'pointer'
+        }}
+      >
+        Edit Profile
+      </button>
+    );
   }
 
   return (
     <div>
-      <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} style={{ width: '100%' }} />
-      <div>
-        <button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</button>
-        <button onClick={() => { setEditing(false); setBio(currentBio || ''); }}>Cancel</button>
+      <textarea
+        value={bio}
+        onChange={e => setBio(e.target.value)}
+        rows={4}
+        style={{
+          width: '100%',
+          padding: '10px',
+          borderRadius: '6px',
+          border: '1px solid #3a4255',
+          backgroundColor: '#111823',
+          color: '#fff',
+          boxSizing: 'border-box',
+          marginBottom: '10px'
+        }}
+      />
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          style={{
+            padding: '8px 16px',
+            borderRadius: '6px',
+            border: 'none',
+            backgroundColor: saving ? '#555' : '#ff4655',
+            color: '#fff',
+            fontWeight: 'bold',
+            cursor: saving ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button
+          onClick={() => {
+            setEditing(false);
+            setBio(currentBio || '');
+          }}
+          style={{
+            padding: '8px 16px',
+            borderRadius: '6px',
+            border: '1px solid #3a4255',
+            backgroundColor: '#111823',
+            color: '#f0f0f0',
+            cursor: 'pointer'
+          }}
+        >
+          Cancel
+        </button>
       </div>
     </div>
   );
