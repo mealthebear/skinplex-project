@@ -1,121 +1,41 @@
 import { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  Navigate,
-} from "react-router-dom";
-
 import Listing from "./vince-frontend/pages/Listing";
 import UserProfile from "./vince-frontend/pages/UserProfile";
-import AuthPage from "./dennis-frontend/pages/AuthPage";
-import RatingsAndReviews from "./dennis-frontend/pages/RatingsAndReviews";
-import HomeFeed from "./dennis-frontend/pages/HomeFeed.jsx";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  if (!currentUser) {
-    return <AuthPage onAuthSuccess={setCurrentUser} />;
-  }
+  const testUserId = "6a5d6fa00a233fa181007a67";
+  const [page, setPage] = useState("create");
+  const [viewId, setViewId] = useState("");
 
   return (
-    <Router>
-      <div
-        className="App"
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "20px",
-          fontFamily: "sans-serif",
-        }}
-      >
-        <nav
-          style={{
-            display: "flex",
-            gap: "20px",
-            paddingBottom: "20px",
-            marginBottom: "20px",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              textDecoration: "none",
-              color: "#007bff",
-              fontWeight: "bold",
-            }}
-          >
-            Browse Skins
-          </Link>
-          <Link
-            to={`/users/${currentUser._id}`}
-            style={{
-              textDecoration: "none",
-              color: "#007bff",
-              fontWeight: "bold",
-            }}
-          >
-            My Profile
-          </Link>
-          <Link
-            to="/create"
-            style={{
-              textDecoration: "none",
-              color: "#007bff",
-              fontWeight: "bold",
-            }}
-          >
-            Create Listing
-          </Link>
-          <button
-            onClick={() => setCurrentUser(null)}
-            style={{
-              marginLeft: "auto",
-              cursor: "pointer",
-              background: "transparent",
-              border: "1px solid #ccc",
-              padding: "4px 12px",
-              borderRadius: "4px",
-            }}
-          >
-            Log Out
-          </button>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<HomeFeed />} />
-          <Route
-            path="/"
-            element={<Navigate to={`/user/${currentUser._id}`} replace />}
-          />
-
-          <Route
-            path="/create"
-            element={<Listing mode="create" currentUser={currentUser} />}
-          />
-
-          <Route
-            path="/listing/:id"
-            element={<Listing mode="view" currentUser={currentUser} />}
-          />
-
-          <Route
-            path="/users/:id"
-            element={<UserProfile currentUser={currentUser} />}
-          />
-
-          <Route
-            path="/user/:id/reviews"
-            element={<RatingsAndReviews currentUser={currentUser} />}
-          />
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+    <div className="App">
+      <div style={{ marginBottom: "20px" }}>
+        <button onClick={() => setPage("create")}>Create Listing</button>
+        <button onClick={() => setPage("profile")}>My Profile</button>
+        <button onClick={() => setPage("view")}>
+          View Listing (enter id below)
+        </button>
+        <br />
+        <input
+          placeholder="listing id to view"
+          value={viewId}
+          onChange={(e) => setViewId(e.target.value)}
+        />
       </div>
-    </Router>
+
+      {page == "create" && <Listing mode="create" sellerId={testUserId} />}
+      {page == "profile" && (
+        <UserProfile
+          userId={testUserId}
+          viewerId={testUserId}
+          onListingClick={(id) => {
+            setViewId(id);
+            setPage("view");
+          }}
+        />
+      )}
+      {page == "view" && viewId && <Listing mode="view" listingId={viewId} />}
+    </div>
   );
 }
 

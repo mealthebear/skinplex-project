@@ -18,6 +18,9 @@ const fetchListings = require("./vince-backend/listings/fetchListings");
 const fetchListingById = require("./vince-backend/listings/fetchListingById");
 const updateListing = require("./vince-backend/listings/updateListing");
 const deleteListing = require("./vince-backend/listings/deleteListing");
+const addToSearchHistory = require("./brandon-backend/searchHistory/addToSearchHistory");
+const fetchSearchHistory = require("./brandon-backend/searchHistory/fetchSearchHistory");
+const fetchSimilarItems = require("./brandon-backend/recommendation/fetchSimilarItems");
 
 app.get("/users/:id", async (req, res) => {
   try {
@@ -113,5 +116,105 @@ async function startServer() {
     console.log(`Server is running and listening on http://localhost:${port}`);
   });
 }
+
+// --- Search (keyword search across listings) ---
+app.get("/search", async (req, res) => {
+  try {
+    const db = require("./db").getDb();
+    const query = {};
+
+    // Keyword search: match against title, description, and skin names
+    if (req.query.q) {
+      const regex = new RegExp(req.query.q, "i");
+      query.$or = [
+        { title: regex },
+        { description: regex },
+        { "skins.name": regex },
+      ];
+    }
+
+    if (req.query.game) query.game = req.query.game;
+    if (req.query.type) query.type = req.query.type;
+
+    const results = await db.collection("listings").find(query).toArray();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error searching listings");
+  }
+});
+
+// --- Search History ---
+app.post("/search-history", async (req, res) => {
+  try {
+    const { userId, query } = req.body;
+    const entry = await addToSearchHistory(userId, query);
+    res.status(201).json(entry);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error saving search history");
+  }
+});
+
+app.get("/search-history/:userId", async (req, res) => {
+  try {
+    const history = await fetchSearchHistory(req.params.userId);
+    res.json(history);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching search history");
+  }
+});
+
+// --- Similar Items (recommendation for a specific listing) ---
+app.get("/listings/:id/similar", async (req, res) => {
+  try {
+    const similar = await fetchSimilarItems(req.params.id);
+    res.json(similar);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching similar items");
+  }
+});
+
+// --- Recommended Listings for Home Page (based on user's search history) ---
+app.get("/recommended/:userId", async (req, res) => {
+  try {
+    const db = require("./db").getDb();
+    const history = await fetchSearchHistory(req.params.userId, 5);
+
+    if (history.length === 0) {
+      // No search history — return newest listings as fallback
+      const recent = await db
+        .collection("listings")
+        .find({})
+        .sort({ createdAt: -1 })
+        .limit(8)
+        .toArray();
+      return res.json(recent);
+    }
+
+    // Build a regex from the user's recent search terms
+    const terms = history.map((h) => h.query);
+    const regex = new RegExp(terms.join("|"), "i");
+
+    const recommended = await db
+      .collection("listings")
+      .find({
+        $or: [
+          { title: regex },
+          { description: regex },
+          { "skins.name": regex },
+        ],
+      })
+      .limit(12)
+      .toArray();
+
+    res.json(recommended);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching recommendations");
+  }
+});
 
 startServer();
