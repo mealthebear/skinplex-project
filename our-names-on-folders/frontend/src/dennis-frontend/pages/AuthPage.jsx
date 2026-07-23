@@ -32,7 +32,7 @@ function AuthPage({ onAuthSuccess }) {
             fontWeight: "600",
           }}
         >
-          Join the Community
+          Join Skinplex!
         </h2>
 
         <p
