@@ -3,7 +3,7 @@ import ListingCard from '../../vince-frontend/components/ListingCard';
  
 const API_URL = 'http://localhost:3001';
  
-function Home({ userId, onListingClick, onSearch }) {
+function Home({ userId, onListingClick, onSearch, onViewReviews }) {
   const [searchText, setSearchText] = useState('');
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -156,6 +156,7 @@ function Home({ userId, onListingClick, onSearch }) {
                 key={listing._id}
                 listing={listing}
                 onClick={() => onListingClick && onListingClick(listing._id)}
+                onViewReviews={onViewReviews}
               />
             ))}
           </div>

@@ -22,6 +22,8 @@ const fetchSearchHistory = require('./brandon-backend/searchHistory/fetchSearchH
 const fetchSimilarItems = require('./brandon-backend/recommendation/fetchSimilarItems');
 const purchaseListing = require('./brandon-backend/purchase/purchaseListing');
 const handleGoogleAuth = require('./dennis-backend/auth/googleAuth');
+const addReview = require('./dennis-backend/ratingsAndReviews/addReview');
+const fetchRatingsAndReviews = require('./dennis-backend/ratingsAndReviews/fetchRatingsAndReviews');
 
 app.get('/users/:id', async (req, res) => {
   try {
@@ -225,6 +227,27 @@ app.post('/api/auth/google', async (req, res) => {
   } catch (error) {
     console.error('Google Auth Error:', error);
     res.status(401).json({ error: 'Invalid Google token' });
+  }
+});
+
+app.get('/users/:id/ratings-and-reviews', async (req, res) => {
+  try {
+    const data = await fetchRatingsAndReviews(req.params.id);
+    if (!data) return res.status(404).send('User not found');
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching ratings and reviews');
+  }
+});
+
+app.post('/users/:id/reviews', async (req, res) => {
+  try {
+    const result = await addReview(req.params.id, req.body);
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error adding review');
   }
 });
 
